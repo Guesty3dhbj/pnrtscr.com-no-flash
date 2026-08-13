@@ -181,55 +181,26 @@
     </div>
 
     <div class="scare">
-        <video id="video" src="./video.mp4" loop playsinline preload="auto"></video>
+        <video id="video" src="./video.mp4" loop playsinline></video>
     </div>
 
     <script>
         const video = document.getElementById("video");
         const overlay = document.getElementById("overlay");
-        const declineButton = document.getElementById("decline-button");
         const acceptButton = document.getElementById("accept-button");
+        const declineButton = document.getElementById("decline-button");
 
-        let hasClicked = false;
-
-        function buttonClick(event) {
-            event.preventDefault();
-
-            hasClicked = true;
-
+        function startVideo() {
             overlay.hidden = true;
-
             video.currentTime = 0;
-            video.play();
 
-            goFullscreen();
+            video.play().catch(function(error) {
+                console.log(error);
+            });
         }
 
-        function goFullscreen() {
-            const element = document.documentElement;
-
-            if (element.requestFullscreen) {
-                element.requestFullscreen();
-            } else if (element.webkitRequestFullscreen) {
-                element.webkitRequestFullscreen();
-            } else if (element.mozRequestFullScreen) {
-                element.mozRequestFullScreen();
-            } else if (element.msRequestFullscreen) {
-                element.msRequestFullscreen();
-            }
-        }
-
-        acceptButton.addEventListener("click", buttonClick);
-        declineButton.addEventListener("click", buttonClick);
-
-        video.addEventListener("click", goFullscreen);
-
-        window.addEventListener("beforeunload", function(event) {
-            if (hasClicked) {
-                event.preventDefault();
-                event.returnValue = "";
-            }
-        });
+        acceptButton.addEventListener("click", startVideo);
+        declineButton.addEventListener("click", startVideo);
     </script>
 
 </body>
